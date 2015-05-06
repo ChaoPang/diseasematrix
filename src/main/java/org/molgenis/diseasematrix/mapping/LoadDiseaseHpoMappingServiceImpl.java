@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +17,7 @@ import org.molgenis.data.csv.CsvRepository;
 
 public class LoadDiseaseHpoMappingServiceImpl implements LoadMappingService
 {
-	private final Map<String, Set<String>> mappings = new HashMap<String, Set<String>>();
+	private final Map<String, Set<String>> mappings = new LinkedHashMap<String, Set<String>>();
 	private final static List<String> COLUMN_HEADERS = Arrays.asList("Disease", "HPO");
 
 	public LoadDiseaseHpoMappingServiceImpl(File file) throws IOException

@@ -1,4 +1,4 @@
-package org.molgenis.diseasematrix.diseasematrix;
+package org.molgenis.diseasematrix.matrix;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +28,16 @@ public class GenerateDistanceMatrix
 	public GenerateDistanceMatrix(File mappingFile, File ontologyFile, File outputFile)
 			throws OWLOntologyCreationException, IOException
 	{
-		this.loadingMappingService = new LoadDiseaseHpoMappingServiceImpl(mappingFile);
-		this.ontologyDistanceService = new LocalOntologyDistanceServiceImpl(ontologyFile);
-		this.csvWriter = new CsvWriter(outputFile);
+		this(new LoadDiseaseHpoMappingServiceImpl(mappingFile), new LocalOntologyDistanceServiceImpl(ontologyFile),
+				new CsvWriter(outputFile));
+	}
+
+	public GenerateDistanceMatrix(LoadMappingService loadingMappingService,
+			OntologyDistanceService ontologyDistanceService, CsvWriter csvWriter)
+	{
+		this.loadingMappingService = loadingMappingService;
+		this.ontologyDistanceService = ontologyDistanceService;
+		this.csvWriter = csvWriter;
 	}
 
 	public void generate() throws IOException
