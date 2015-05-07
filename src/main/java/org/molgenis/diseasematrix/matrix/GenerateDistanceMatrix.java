@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.molgenis.data.csv.CsvWriter;
@@ -44,6 +45,10 @@ public class GenerateDistanceMatrix
 	{
 		Set<String> diseases = loadingMappingService.getAllDiseases();
 
+		AtomicInteger totalNumber = new AtomicInteger();
+		AtomicInteger progressNumber = new AtomicInteger();
+		totalNumber.set(diseases.size());
+
 		List<String> csvAttributeNames = Lists.newArrayList(diseases);
 		csvAttributeNames.add(0, "disease");
 		csvWriter.writeAttributeNames(csvAttributeNames);
@@ -60,13 +65,30 @@ public class GenerateDistanceMatrix
 				}
 				else
 				{
-					mapEntity.set(disease2, "N/A");
+					mapEntity.set(disease2, 0);
 				}
 			}
 			csvWriter.add(mapEntity);
+
+			printProgress(progressNumber.incrementAndGet(), totalNumber.intValue());
+		}
+
+		printProgress(progressNumber.intValue(), totalNumber.intValue());
+
+		if (ontologyDistanceService.getUniqueErrorMessage().size() > 0)
+		{
+			ontologyDistanceService.getUniqueErrorMessage().forEach(error -> System.out.println(error));
 		}
 
 		csvWriter.close();
+	}
+
+	public void printProgress(int progressNumber, int totalNumber)
+	{
+		if (progressNumber / 100 == 0 && progressNumber > 100)
+		{
+			System.out.println(progressNumber + " out of " + totalNumber + " have been processed!");
+		}
 	}
 
 	public double calculateDiseaseDistance(String disease1, String disease2)
@@ -77,7 +99,11 @@ public class GenerateDistanceMatrix
 		{
 			for (String hpoTerm2 : loadingMappingService.get(disease2))
 			{
-				distances.add(ontologyDistanceService.calculateDistance(hpoTerm1, hpoTerm2));
+				Integer calculateDistance = ontologyDistanceService.calculateDistance(hpoTerm1, hpoTerm2);
+				if (calculateDistance != null)
+				{
+					distances.add(calculateDistance);
+				}
 			}
 		}
 
@@ -86,6 +112,8 @@ public class GenerateDistanceMatrix
 
 	public double calculateMean(List<Integer> list)
 	{
+		if (list.size() == 0) return 0;
+
 		double average = 0;
 		for (Integer number : list)
 		{

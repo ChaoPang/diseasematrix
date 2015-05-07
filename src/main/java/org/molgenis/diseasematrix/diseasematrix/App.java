@@ -58,7 +58,10 @@ public class App
 	private static Options createOptions()
 	{
 		Options options = new Options();
-		options.addOption(new Option("mapping", true, "provide the mapping file for diseases and hpo terms"));
+		options.addOption(new Option(
+				"mapping",
+				true,
+				"provide the mapping file for diseases and hpo terms. The mapping file needs to contain headers \"Disease\" and \"HPO\""));
 		options.addOption(new Option("ontology", true, "provide the hpo ontology file"));
 		options.addOption(new Option("output", true, "provide the path of output file"));
 		return options;
