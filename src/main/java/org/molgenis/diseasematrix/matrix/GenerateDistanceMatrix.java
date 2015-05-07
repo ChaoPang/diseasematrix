@@ -73,7 +73,7 @@ public class GenerateDistanceMatrix
 			printProgress(progressNumber.incrementAndGet(), totalNumber.intValue());
 		}
 
-		printProgress(progressNumber.intValue(), totalNumber.intValue());
+		System.out.println("COMPLETE : " + totalNumber + " of diseases have been processed!");
 
 		if (ontologyDistanceService.getUniqueErrorMessage().size() > 0)
 		{
@@ -85,7 +85,7 @@ public class GenerateDistanceMatrix
 
 	public void printProgress(int progressNumber, int totalNumber)
 	{
-		if (progressNumber / 100 == 0 && progressNumber > 100)
+		if (progressNumber % 100 == 0)
 		{
 			System.out.println(progressNumber + " out of " + totalNumber + " have been processed!");
 		}

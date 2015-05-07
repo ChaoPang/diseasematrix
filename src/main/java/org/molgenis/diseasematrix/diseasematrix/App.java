@@ -31,12 +31,29 @@ public class App
 			File ontologyFile = new File(cmd.getOptionValue("ontology"));
 			File outputFile = new File(cmd.getOptionValue("output"));
 
-			if (mappingFile.exists() && ontologyFile.exists() && outputFile.exists())
+			if (!mappingFile.exists())
 			{
-				GenerateDistanceMatrix generateDistanceMatrix = new GenerateDistanceMatrix(mappingFile, ontologyFile,
-						outputFile);
-				generateDistanceMatrix.generate();
+				System.out.println("The mapping file " + mappingFile.getAbsolutePath() + " does not exist!");
+				System.exit(0);
 			}
+
+			if (!ontologyFile.exists())
+			{
+				System.out.println("The ontology file " + ontologyFile.getAbsolutePath() + " does not exist!");
+				System.exit(0);
+			}
+
+			if (outputFile.exists())
+			{
+				System.out.println("The output file " + outputFile.getAbsolutePath()
+						+ " already exists! Please re-define your output file");
+				System.exit(0);
+			}
+
+			GenerateDistanceMatrix generateDistanceMatrix = new GenerateDistanceMatrix(mappingFile, ontologyFile,
+					outputFile);
+
+			generateDistanceMatrix.generate();
 		}
 		else
 		{
